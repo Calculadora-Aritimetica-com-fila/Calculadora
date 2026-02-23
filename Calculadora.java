@@ -56,6 +56,7 @@ public class Calculadora {
 
                     double resultado;
 
+                    // Pega os operadores a partir da String Digitada
                     switch (stringDigitada) {
                         case "+":
                             resultado = primeiro + segundo;
@@ -72,14 +73,17 @@ public class Calculadora {
                         default:
                             throw new RuntimeException();
                     }
+                    //Empilha o operador na fila
                     pilhaNumeros.empilha(resultado);
                 }
             }
+            //Se a pilha tiver o comprimento de 1:
             if (pilhaNumeros.comprimento() == 1) {
                 System.out.println("O resultado é " + pilhaNumeros.desempilha());
             } else {
                 System.out.println("F");
             }
+            //Caso ele nem passe pelo For:
         } catch (Exception e) {
             System.out.println("F");
         }
