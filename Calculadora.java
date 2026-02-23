@@ -21,28 +21,68 @@ Seu programa deve ler do teclado a expressão a ser calculada, calcular o result
 
 import java.util.Scanner;
 
-public class Calculadora{
-  public static void main(String[] args) {
-    System.out.println("Calculadora iniciada.");
+public class Calculadora {
+    public static void main(String[] args) {
+        System.out.println("Calculadora iniciada.");
 
-    Scanner scanner = new Scanner(System.in);
-    Pilha<String> pilhaNumeros = new Pilha<>();
-    Pilha<String> pilhaDados = new Pilha<>();
+        //Cria a pilha dos Números digitados
+        Scanner scanner = new Scanner(System.in);
+        Pilha<Double> pilhaNumeros = new Pilha<>();
 
-    System.out.println("Digite a expressão a ser calculada (em notação pós-fixada):");
-    String expressao = scanner.nextLine();
-    StringBuilder filtro = new StringBuilder();
-    for (int i = 0; i < expressao.length(); i++) {
-      char c = expressao.charAt(i);
-      if (c != '') {
-        filtro.append(c);
-      } else {
-        if (filtro.length() > 0) {
-          pilhaDados.empilha(filtro.toString());
-          filtro.setLength(0);
+
+        System.out.println("Digite a expressão a ser calculada (em notação pós-fixada):");
+        String expressao = scanner.nextLine();
+
+        //Separa a expressão pelo Split
+        String[] expressaoArray = expressao.split(" ");
+
+        try {
+            //Pega os operadores e os números:
+            for (String stringDigitada : expressaoArray) {
+
+                //Tenta converter tudo para número ( e se for, empilha eles):
+                try {
+                    double numeroDigitado = Double.parseDouble(stringDigitada);
+                    pilhaNumeros.empilha(numeroDigitado);
+                } catch (NumberFormatException e) {
+                    //Se não é número, então é operador:
+                    if (pilhaNumeros.comprimento() < 2) {
+                        throw new RuntimeException();
+                    }
+
+                    //Desempilha os números:
+                    double primeiro = pilhaNumeros.desempilha();
+                    double segundo = pilhaNumeros.desempilha();
+
+                    double resultado;
+
+                    switch (stringDigitada) {
+                        case "+":
+                            resultado = primeiro + segundo;
+                            break;
+                        case "-":
+                            resultado = primeiro - segundo;
+                            break;
+                        case "*":
+                            resultado = primeiro * segundo;
+                            break;
+                        case "/":
+                            resultado = primeiro / segundo;
+                            break;
+                        default:
+                            throw new RuntimeException();
+                    }
+                    pilhaNumeros.empilha(resultado);
+                }
+            }
+            if (pilhaNumeros.comprimento() == 1) {
+                System.out.println("O resultado é " + pilhaNumeros.desempilha());
+            } else {
+                System.out.println("F");
+            }
+        } catch (Exception e) {
+            System.out.println("F");
         }
-      }
-      
+        scanner.close();
     }
-  }
-} 
+}
